@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Excel的导入导出</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous">
+    </script>
+</head>
+<body>
+<hr/>
+    导出Excel：<button id="exportexcel">提交</button>
+    <hr/>
+    导入xlsx格式：<button id="importexcelxlsx">提交</button>
+    <hr/>
+    导入csv格式：<button id="importexcecsv">提交</button>
+    <input type="file" id="wenjian">
+
+    <a href='' >下载文件</a>
+
+
+
+<!-- 
+    <input id="fileInput" type="file" size="50" onchange="processFiles(this.files)">
+    <div id="message"></div>
+    <div id="fileOutput"></div> -->
+
+
+    <form enctype="multipart/form-data" id="uploadImg">
+    上传文件:  
+    <input name="file" type="file" id="file"> 
+</form>
+  
+
+<iframe src='http://127.0.0.1:3000/static/upload-pdf/11.pdf'>aaa</iframe>
+
+<!-- <iframe src="http://www.xdocin.com/xdoc?_func=to&_format=html&_cache=true&_source=true&_key=ily2pjhlzve3vjcfzmobsxma7q&_xdoc=http://127.0.0.1:8989/static/upload/接口文档.xlsx" width='100%' height='100%' target="_blank" rel="nofollow"></iframe> -->
+
+<a href="http://127.0.0.1:8989/static/upload/抽水蓄能大数据 最后计划.xlsx">点击打开</a>
+<iframe src="http://www.xdocin.com/xdoc?_func=to&_format=html&_cache=true&_source=true&_key=ily2pjhlzve3vjcfzmobsxma7q&_xdoc=http://www.xdocin.com/doc/CreateReport.docx" width='100%' height='100%' target="_blank" rel="nofollow"></iframe>
+<script>
+    $(function () {
+        $("#exportexcel").on("click",function () {
+            // let a = [1,3,21]
+            // let b = JSON.stringify(a)
+            var arr = [1,2,3,4];
+            var str = arr.join(',');
+            
+            $.ajax({
+                url : "zuizhongfenxiugai",
+                type : "post",
+                data:{
+                 num2:'包1房间442装修',
+                 sele:2,
+                 c:1
+                },
+                      
+                
+                success : function(data){
+                    console.log(data);
+                }
+            });
+        
+        });
+        $("#importexcelxlsx").on("click",function () {
+            $.ajax({
+                url : "/importexcelxlsx",
+                type : "POST",
+                data : {
+                    id:[[{name:'qiao',pass:123},{name:'xin',pass:123}]]
+                },
+                success : function(data){
+                    console.log(data);
+                }
+            });
+        });
+        $("#importexcecsv").on("click",function () {
+            $.ajax({
+                url : "/wenjiandaochu",
+                type : "get",
+                // data : {
+                //     bitName:'老杨集团'
+                // },
+                success : function(data){
+                    console.log(data);
+                }
+            });
+        });
+    })
+
+  var wenjian = document.getElementById('wenjian')
+  wenjian.onclick=function(e){
+      console.log(e)
+    let file = e.currentTarget.files[0];
+    let fileDir = file.name;
+    let formData = new FormData();
+    formData.append('file',file);
+    let config = {
+       headers: {
+          'Content-Type': 'multipart/form-data'
+       }
+    }
+    axios.post("/api/importexcel",formData,config).then((res) => {
+         console.log(res);
+    })
+  }
+  
+
+
+
+  function processFiles(files) {
+      var file = files[0];
+ 
+      var message = document.getElementById("message");
+      message.innerHTML = "文件名：" + file.name + "<br>";
+      message.innerHTML += "文件大小：" + file.size + "字节<br>";
+      message.innerHTML += "文件类型：" + file.type + "<br>";
+       
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        // 这个事件发生，意为着数据准备好了
+        // 把它复制到页面的<div>元素中
+        var output = document.getElementById("fileOutput");  
+       
+        output.textContent = e.target.result;
+      };
+      reader.readAsBinaryString(file);
+    }
+
+
+
+    $(function(){
+        $('input[type="file"]').on('change', function(){
+            console.log(this,123)
+            var file = this.files[0];
+            console.log(this.files)
+            var formData = new FormData();
+            formData.append('file', file);
+            console.log(formData.get('file'))
+            $.ajax({
+                url: '/upload',
+                type: 'POST',
+                cache: false,
+                data: formData,
+                //dataType: 'json',
+                //async: false,
+                processData: false,    //不需要对数据做任何预处理
+                contentType: false,    //不设置数据格式
+            }).done(function(res) {
+                console.log(res)
+            }).fail(function(res) {
+                console.log(res)
+            });
+        });
+    })
+</script>
+</body>
+</html>
